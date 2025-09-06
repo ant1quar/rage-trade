@@ -1,10 +1,5 @@
-import { Layout } from '@/app/components/shared/ui/Layout';
-import { ConnectWallet } from '@/app/components/features/connect-wallet';
+import { redirect } from 'next/navigation';
 
 export default function Home() {
-  return (
-    <Layout>
-      <ConnectWallet />
-    </Layout>
-  );
+  redirect('/connect-wallet');
 }

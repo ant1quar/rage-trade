@@ -12,7 +12,7 @@ export function Header() {
   const pathname = usePathname();
 
   const navItems = [
-    { href: '/', label: 'Connect Wallet' },
+    { href: '/connect-wallet', label: 'Connect Wallet' },
     { href: '/account-overview', label: 'Account Overview' }
   ];
 
