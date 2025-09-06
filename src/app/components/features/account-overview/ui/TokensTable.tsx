@@ -1,6 +1,6 @@
 'use client';
 
-import { DollarIcon, MoneyBagIcon } from '@/app/components/shared/ui/Icons';
+import { DollarIcon, MoneyBagIcon, EthereumIcon, ArbitrumIcon, OptimismIcon } from '@/app/components/shared/ui/Icons';
 
 export interface TokenData {
   token: string;
@@ -21,19 +21,19 @@ function TokenRow({ token, symbol, network, balance, balanceUsd, price }: TokenD
       case 'Arbitrum':
         return (
           <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center">
-            <DollarIcon size={12} color="#ffffff" />
+            <ArbitrumIcon size={12} color="#ffffff" />
           </div>
         );
       case 'Optimism':
         return (
-          <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-            OP
+          <div className="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+            <OptimismIcon size={12} color="#ffffff" />
           </div>
         );
       case 'Ethereum':
         return (
           <div className="w-5 h-5 bg-gray-600 rounded-full flex items-center justify-center">
-            <DollarIcon size={12} color="#ffffff" />
+            <EthereumIcon size={12} color="#ffffff" />
           </div>
         );
       case 'Hyperliquid':

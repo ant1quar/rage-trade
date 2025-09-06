@@ -75,3 +75,47 @@ export function ArrowUpIcon({ size = 16, color = 'currentColor', className }: Ic
     </svg>
   );
 }
+
+export function EthereumIcon({ size = 16, color = 'currentColor', className }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill={color}
+      className={className}
+    >
+      <path d="M12 1L5.5 12.25L12 16.5L18.5 12.25L12 1ZM12 18L5.5 13.75L12 23L18.5 13.75L12 18Z" />
+    </svg>
+  );
+}
+
+export function ArbitrumIcon({ size = 16, color = 'currentColor', className }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill={color}
+      className={className}
+    >
+      <path d="M12 2L2 7V17L12 22L22 17V7L12 2ZM20 16.38L12 20.38L4 16.38V7.62L12 3.62L20 7.62V16.38Z" />
+      <path d="M12 6L7 14H17L12 6Z" />
+    </svg>
+  );
+}
+
+export function OptimismIcon({ size = 16, color = 'currentColor', className }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill={color}
+      className={className}
+    >
+      <circle cx="8" cy="12" r="4" />
+      <circle cx="16" cy="12" r="4" />
+    </svg>
+  );
+}
