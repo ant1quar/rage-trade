@@ -1,8 +1,8 @@
 'use client';
 
-import { WalletIcon, DollarIcon, MoneyBagIcon } from '@/app/components/shared/ui/Icons';
+import { DollarIcon, MoneyBagIcon } from '@/app/components/shared/ui/Icons';
 
-interface TokenRowProps {
+export interface TokenData {
   token: string;
   symbol: string;
   network: string;
@@ -11,7 +11,11 @@ interface TokenRowProps {
   price: string;
 }
 
-function TokenRow({ token, symbol, network, balance, balanceUsd, price }: TokenRowProps) {
+interface TokensTableProps {
+  tokens: TokenData[];
+}
+
+function TokenRow({ token, symbol, network, balance, balanceUsd, price }: TokenData) {
   const getNetworkIcon = (network: string) => {
     switch (network) {
       case 'Arbitrum':
@@ -71,113 +75,27 @@ function TokenRow({ token, symbol, network, balance, balanceUsd, price }: TokenR
   );
 }
 
-interface TokensSectionProps {
-  wallet: string;
-  tokens: TokenRowProps[];
-}
 
-function TokensSection({ wallet, tokens }: TokensSectionProps) {
-  const getWalletIcon = (wallet: string) => {
-    switch (wallet) {
-      case 'Metamask':
-        return <WalletIcon size={20} color="#fb923c" />;
-      case 'Hyperliquid':
-        return <DollarIcon size={20} color="#60a5fa" />;
-      default:
-        return <WalletIcon size={20} color="#9ca3af" />;
-    }
-  };
-
+export function TokensTable({ tokens }: TokensTableProps) {
   return (
-    <div className="mb-8">
-      <h3 className="text-white text-lg font-semibold mb-4 flex items-center gap-2">
-        <div className="w-6 h-6 bg-gray-700 rounded-full flex items-center justify-center">
-          {getWalletIcon(wallet)}
-        </div>
-        {wallet} Tokens
-      </h3>
-      <div className="bg-gray-800 rounded-lg overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-900">
-              <tr>
-                <th className="py-4 px-6 text-left text-gray-400 font-medium">Token</th>
-                <th className="py-4 px-6 text-left text-gray-400 font-medium">Network</th>
-                <th className="py-4 px-6 text-left text-gray-400 font-medium">Balance</th>
-                <th className="py-4 px-6 text-left text-gray-400 font-medium">Price</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tokens.map((token, index) => (
-                <TokenRow key={index} {...token} />
-              ))}
-            </tbody>
-          </table>
-        </div>
+    <div className="bg-gray-800 rounded-lg overflow-hidden">
+      <div className="overflow-x-auto">
+        <table className="w-full">
+          <thead className="bg-gray-900">
+            <tr>
+              <th className="py-4 px-6 text-left text-gray-400 font-medium">Token</th>
+              <th className="py-4 px-6 text-left text-gray-400 font-medium">Network</th>
+              <th className="py-4 px-6 text-left text-gray-400 font-medium">Balance</th>
+              <th className="py-4 px-6 text-left text-gray-400 font-medium">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {tokens.map((token, index) => (
+              <TokenRow key={index} {...token} />
+            ))}
+          </tbody>
+        </table>
       </div>
-    </div>
-  );
-}
-
-export function TokensTable() {
-  const metamaskTokens = [
-    {
-      token: 'USD Coin',
-      symbol: 'USDC',
-      network: 'Arbitrum',
-      balance: '1,000.00 USDC',
-      balanceUsd: '$1,000.00',
-      price: '$1.00'
-    },
-    {
-      token: 'Wrapped Bitcoin',
-      symbol: 'WBTC',
-      network: 'Arbitrum',
-      balance: '0.025 WBTC',
-      balanceUsd: '$2,500.00',
-      price: '$100,000.00'
-    },
-    {
-      token: 'Ethereum',
-      symbol: 'ETH',
-      network: 'Optimism',
-      balance: '1.5 ETH',
-      balanceUsd: '$6,000.00',
-      price: '$4,000.00'
-    },
-    {
-      token: 'USD Tether',
-      symbol: 'USDT',
-      network: 'Optimism',
-      balance: '500.00 USDT',
-      balanceUsd: '$500.00',
-      price: '$1.00'
-    }
-  ];
-
-  const hyperliquidTokens = [
-    {
-      token: 'USD Coin',
-      symbol: 'USDC',
-      network: 'Hyperliquid',
-      balance: '2,000.00 USDC',
-      balanceUsd: '$2,000.00',
-      price: '$1.00'
-    },
-    {
-      token: 'Solana',
-      symbol: 'SOL',
-      network: 'Hyperliquid',
-      balance: '10.0 SOL',
-      balanceUsd: '$2,500.00',
-      price: '$250.00'
-    }
-  ];
-
-  return (
-    <div>
-      <TokensSection wallet="Metamask" tokens={metamaskTokens} />
-      <TokensSection wallet="Hyperliquid" tokens={hyperliquidTokens} />
     </div>
   );
 }
