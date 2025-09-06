@@ -1,12 +1,19 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import { Button } from '@/app/components/shared/ui/Button';
+import { WalletModal } from '@/app/components/features/connect-wallet';
 
 export function Header() {
+  const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+
   const handleConnectWallet = () => {
-    // TODO: Implement wallet connection logic
-    console.log('Header: Connecting wallet...');
+    setIsWalletModalOpen(true);
+  };
+
+  const handleCloseWalletModal = () => {
+    setIsWalletModalOpen(false);
   };
 
   return (
@@ -36,6 +43,12 @@ export function Header() {
           </div>
         </div>
       </div>
+
+      {/* Wallet Modal */}
+      <WalletModal 
+        isOpen={isWalletModalOpen} 
+        onClose={handleCloseWalletModal} 
+      />
     </header>
   );
 }
