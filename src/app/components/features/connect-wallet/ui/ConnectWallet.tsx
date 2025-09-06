@@ -1,12 +1,10 @@
 'use client';
 
 import { Button } from '@/app/components/shared/ui/Button';
+import { useModalSync } from '@/app/hooks/useModalSync';
 
 export function ConnectWallet() {
-  const handleConnect = () => {
-    // TODO: Implement wallet connection logic
-    console.log('Connecting wallet...');
-  };
+  const { openConnectModal } = useModalSync();
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] text-center">
@@ -22,7 +20,7 @@ export function ConnectWallet() {
         </p>
         
         <Button 
-          onClick={handleConnect}
+          onClick={openConnectModal}
           size="large"
           className="w-full"
         >

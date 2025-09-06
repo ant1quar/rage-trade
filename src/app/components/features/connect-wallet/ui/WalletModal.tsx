@@ -31,7 +31,6 @@ const walletOptions: WalletOption[] = [
 export function WalletModal({ isOpen, onClose }: WalletModalProps) {
   const handleWalletClick = (walletId: string) => {
     console.log(`Connecting to ${walletId}...`);
-    // TODO: Implement wallet connection logic
   };
 
   return (
@@ -40,7 +39,6 @@ export function WalletModal({ isOpen, onClose }: WalletModalProps) {
       onClose={onClose} 
       title="Connect Your Wallet"
     >
-      {/* Wallet Options */}
       <div className="space-y-3">
         {walletOptions.map((wallet) => (
           <button

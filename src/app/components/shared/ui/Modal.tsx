@@ -21,13 +21,11 @@ export function Modal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-black/40 backdrop-blur-[15px]"
         onClick={onClose}
       />
       
-      {/* Modal */}
       <div 
         className={`relative w-full ${maxWidth} mx-4 rounded-xl p-6`}
         style={{
@@ -35,7 +33,6 @@ export function Modal({
           border: '1px solid #26293F'
         }}
       >
-        {/* Header */}
         {title && (
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-white">
@@ -58,7 +55,6 @@ export function Modal({
           </div>
         )}
 
-        {/* Content */}
         {children}
       </div>
     </div>
