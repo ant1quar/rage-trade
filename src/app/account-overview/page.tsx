@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { Layout } from '@/app/components/shared/ui/Layout';
 import { Tabs } from '@/app/components/shared/ui/Tabs';
-import { TokensTable, TokenData } from '@/app/components/features/account-overview/ui/TokensTable';
-import { WalletsTable } from '../components/features/account-overview/ui/WalletsTable';
+import { TokensTable, TokenData } from '@/app/components/features/tokens-table';
+import { WalletsTable } from '@/app/components/features/wallet-table';
 
 export default function AccountOverviewPage() {
   const [activeTab, setActiveTab] = useState('totalBalance');

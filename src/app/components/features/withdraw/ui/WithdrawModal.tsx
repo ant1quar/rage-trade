@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import { Modal } from '@/app/components/shared/ui/Modal';
-import { DollarIcon, MoneyBagIcon, EthereumIcon, ArbitrumIcon, OptimismIcon } from '@/app/components/shared/ui/Icons';
-import { TokenData } from '@/app/components/features/account-overview/ui/TokensTable';
+import { EthereumIcon, ArbitrumIcon, OptimismIcon } from '@/app/components/shared/ui/Icons';
+import { TokenData } from '@/app/components/features/tokens-table';
+import { useModalSync } from '@/app/hooks/useModalSync';
+import { useWithdrawStore } from '../store/withdrawStore';
 
 interface NetworkOption {
   id: string;
@@ -11,15 +13,6 @@ interface NetworkOption {
   color: string;
   borderColor: string;
   IconComponent: React.ComponentType<{ size?: number; color?: string; className?: string }>;
-}
-
-interface WithdrawModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  wallet?: string;
-  preselectedNetwork?: string;
-  preselectedToken?: TokenData;
-  availableTokens?: TokenData[];
 }
 
 const networks: NetworkOption[] = [
@@ -46,29 +39,29 @@ const networks: NetworkOption[] = [
   }
 ];
 
-export function WithdrawModal({ 
-  isOpen, 
-  onClose, 
-  wallet,
-  preselectedNetwork,
-  preselectedToken,
-  availableTokens = []
-}: WithdrawModalProps) {
-  const [selectedNetwork, setSelectedNetwork] = useState(preselectedNetwork || 'arbitrum');
-  const [selectedToken, setSelectedToken] = useState<TokenData | null>(preselectedToken || null);
+export function WithdrawModal() {
+  const { isWithdrawModalOpen, closeModal } = useModalSync();
+  const { selectedWallet, selectedWalletTokens, clearWithdrawData } = useWithdrawStore();
+  const [selectedNetwork, setSelectedNetwork] = useState(networks[0].id);
+  const [selectedToken, setSelectedToken] = useState<TokenData | undefined>(undefined);
   const [address, setAddress] = useState('');
   const [amount, setAmount] = useState('');
 
   useEffect(() => {
-    if (preselectedNetwork) {
-      setSelectedNetwork(preselectedNetwork);
+    if (isWithdrawModalOpen) {
+      setSelectedNetwork(networks[0].id);
+      setSelectedToken(undefined);
+      setAddress('');
+      setAmount('');
     }
-    if (preselectedToken) {
-      setSelectedToken(preselectedToken);
-    }
-  }, [preselectedNetwork, preselectedToken]);
+  }, [isWithdrawModalOpen]);
 
-  const filteredTokens = availableTokens.filter(token => {
+  const handleClose = () => {
+    closeModal();
+    clearWithdrawData();
+  };
+
+  const filteredTokens = selectedWalletTokens.filter(token => {
     const networkMap: Record<string, string> = {
       'arbitrum': 'Arbitrum',
       'optimism': 'Optimism', 
@@ -104,14 +97,14 @@ export function WithdrawModal({
       address,
       amount
     });
-    onClose();
+    handleClose();
   };
 
   return (
     <Modal 
-      isOpen={isOpen} 
-      onClose={onClose} 
-      title="Withdraw"
+      isOpen={isWithdrawModalOpen} 
+      onClose={handleClose} 
+      title={`Withdraw from ${selectedWallet || 'Wallet'}`}
       maxWidth="max-w-lg"
     >
       <div className="space-y-6">
@@ -181,7 +174,7 @@ export function WithdrawModal({
                 value={selectedToken?.symbol || ''}
                 onChange={(e) => {
                   const token = filteredTokens.find(t => t.symbol === e.target.value);
-                  setSelectedToken(token || null);
+                  setSelectedToken(token || undefined);
                   setAmount('');
                 }}
                 className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:border-blue-500 focus:outline-none transition-colors appearance-none"

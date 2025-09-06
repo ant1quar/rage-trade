@@ -2,6 +2,7 @@
 import { ReactNode } from 'react';
 import { Header } from '@/app/components/widgets/header';
 import { WalletModal } from '@/app/components/features/connect-wallet';
+import { WithdrawModal } from '@/app/components/features/withdraw';
 import { useModalSync } from '@/app/hooks/useModalSync';
 
 interface LayoutProps {
@@ -22,6 +23,8 @@ export function Layout({ children }: LayoutProps) {
         isOpen={isConnectModalOpen} 
         onClose={closeModal} 
       />
+      
+      <WithdrawModal />
     </div>
   );
 }
