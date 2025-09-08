@@ -1,13 +1,33 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Layout } from '@/app/components/shared/ui/Layout';
 import { Tabs } from '@/app/components/shared/ui/Tabs';
 import { TokensTable, TokenData } from '@/app/components/features/tokens-table';
 import { WalletsTable } from '@/app/components/features/wallet-table';
+import { useWalletStore } from '@/app/store/walletStore';
 
 export default function AccountOverviewPage() {
+  const router = useRouter();
+  const { isConnected, connectedWallets } = useWalletStore();
   const [activeTab, setActiveTab] = useState('totalBalance');
+
+  useEffect(() => {
+    if (!isConnected || connectedWallets.length === 0) {
+      router.push('/connect-wallet');
+    }
+  }, [isConnected, connectedWallets.length, router]);
+
+  if (!isConnected || connectedWallets.length === 0) {
+    return (
+      <Layout>
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
+        </div>
+      </Layout>
+    );
+  }
 
   const metamaskTokens: TokenData[] = [
     {
