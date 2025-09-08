@@ -10,9 +10,14 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.87.1",
+    "@wagmi/connectors": "^5.9.9",
+    "@wagmi/core": "^2.20.3",
     "next": "15.5.2",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "solar-icon-set": "^2.0.0",
+    "viem": "^2.37.4",
+    "wagmi": "^2.16.9",
     "zustand": "^5.0.8"
   },
   "devDependencies": {

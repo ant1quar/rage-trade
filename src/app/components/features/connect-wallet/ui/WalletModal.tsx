@@ -1,36 +1,71 @@
 'use client';
 
+import { useConnect } from 'wagmi';
 import { Modal } from '@/app/components/shared/ui';
-
-interface WalletOption {
-  id: string;
-  name: string;
-  icon: string;
-  connected?: boolean;
-}
+import { useWalletStore } from '@/app/store/walletStore';
+import type { Connector } from 'wagmi';
 
 interface WalletModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const walletOptions: WalletOption[] = [
-  {
-    id: 'trust-wallet',
-    name: 'Trust Wallet',
-    icon: 'trust',
-    connected: true
-  },
-  {
-    id: 'wallet-connect',
-    name: 'WalletConnect',
-    icon: 'walletconnect'
-  }
-];
-
 export function WalletModal({ isOpen, onClose }: WalletModalProps) {
-  const handleWalletClick = (walletId: string) => {
-    console.log(`Connecting to ${walletId}...`);
+  const { connectors, connect, isPending } = useConnect();
+  const { addWallet } = useWalletStore();
+
+  const handleWalletClick = (connector: Connector) => {
+    try {
+      connect({ 
+        connector,
+      }, {
+        onSuccess: (data) => {
+          if (data && data.accounts && data.accounts[0]) {
+            addWallet({
+              address: data.accounts[0],
+              name: connector.name,
+              connector: connector.id,
+              chainId: data.chainId
+            });
+            onClose();
+          }
+        },
+        onError: (error) => {
+          console.error('Failed to connect wallet:', error);
+        }
+      });
+    } catch (error) {
+      console.error('Failed to connect wallet:', error);
+    }
+  };
+
+  const getWalletIcon = (connectorId: string) => {
+    switch (connectorId) {
+      case 'metaMask':
+        return (
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
+          </svg>
+        );
+      case 'walletConnect':
+        return (
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+        );
+      case 'coinbaseWallet':
+        return (
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="12" r="10"/>
+          </svg>
+        );
+      default:
+        return (
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
+          </svg>
+        );
+    }
   };
 
   return (
@@ -40,11 +75,12 @@ export function WalletModal({ isOpen, onClose }: WalletModalProps) {
       title="Connect Your Wallet"
     >
       <div className="space-y-3">
-        {walletOptions.map((wallet) => (
+        {connectors.map((connector) => (
           <button
-            key={wallet.id}
-            onClick={() => handleWalletClick(wallet.id)}
-            className="w-full flex items-center justify-between p-4 rounded-lg transition-colors hover:bg-opacity-80 cursor-pointer"
+            key={connector.id}
+            onClick={() => handleWalletClick(connector)}
+            disabled={isPending}
+            className="w-full flex items-center justify-between p-4 rounded-lg transition-colors hover:bg-opacity-80 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             style={{
               background: '#13152080',
               border: '1px solid #26293F'
@@ -52,23 +88,15 @@ export function WalletModal({ isOpen, onClose }: WalletModalProps) {
           >
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center text-white">
-                {wallet.icon === 'trust' ? (
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2L3 7v5c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-9-5z"/>
-                  </svg>
-                ) : (
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                  </svg>
-                )}
+                {getWalletIcon(connector.id)}
               </div>
-              <span className="text-white font-medium">{wallet.name}</span>
+              <span className="text-white font-medium">{connector.name}</span>
             </div>
             
-            {wallet.connected && (
+            {isPending && (
               <div className="flex items-center space-x-2">
-                <span className="text-green-400 text-sm font-medium">Connected</span>
-                <div className="w-4 h-4 bg-green-400 rounded-full border-4 border-green-100"></div>
+                <span className="text-yellow-400 text-sm font-medium">Connecting...</span>
+                <div className="w-4 h-4 border-2 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
               </div>
             )}
           </button>
