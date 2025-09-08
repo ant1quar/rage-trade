@@ -31,10 +31,32 @@ export const wagmiConfig = createConfig({
     injected({ shimDisconnect: true })
   ],
   transports: {
-    [mainnet.id]: http(),
-    [arbitrum.id]: http(),
-    [optimism.id]: http(),
+    [mainnet.id]: http('https://eth.llamarpc.com', {
+      batch: true,
+      fetchOptions: {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    }),
+    [arbitrum.id]: http('https://arbitrum.llamarpc.com', {
+      batch: true,
+      fetchOptions: {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    }),
+    [optimism.id]: http('https://optimism.llamarpc.com', {
+      batch: true,
+      fetchOptions: {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+    }),
   },
+  ssr: true,
 });
 
 declare module 'wagmi' {
